@@ -77,6 +77,7 @@ class Root_Loader {
 			$plugins[] = new UsageStatistics_Plugin_Admin();
 			$plugins[] = new SetupGuide_Plugin_Admin();
 			$plugins[] = new FeatureShowcase_Plugin_Admin();
+			$plugins[] = new Generic_User_Notice_Utility();
 		} else {
 			if ( $c->get_boolean( 'jquerymigrate.disabled' ) ) {
 				$plugins[] = new UserExperience_Plugin_Jquery();

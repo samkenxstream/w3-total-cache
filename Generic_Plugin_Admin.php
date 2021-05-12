@@ -435,6 +435,24 @@ class Generic_Plugin_Admin {
 				'w3tc_nonce',
 				array( wp_create_nonce( 'w3tc' ) )
 			);
+
+			/*
+			 * Localize an alternative to the options script above.
+			 *
+			 * The initial "w3tc_nonce" localization above only passes one translation, and it is not
+			 * in the array with a key. There's roughly 80 uses of "w3tc_nonce" or "w3tc_nonce[0]",
+			 * but scripts break when you add other items to the above array. Because of this, we're
+			 * localizing another array using named key / value pairs.
+			 *
+			 * @todo improve the above.
+			 */
+			wp_localize_script(
+				'w3tc-options-alt',
+				'w3tc_options_alt',
+				array(
+					'unknown_user_notice' => __( 'An unknown error occurred when attempting to dismiss this notice.', 'w3-total-cache' ),
+				)
+			);
 		}
 
 		switch ( $this->_page ) {

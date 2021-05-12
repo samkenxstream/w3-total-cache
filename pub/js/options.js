@@ -1305,4 +1305,57 @@ jQuery(function() {
 				w3tc_ga('send', 'event', 'select', value, name);
 		});
 	}
+
+	/**
+	 * Dismiss a user notice.
+	 *
+	 * @since SINCEVERSION
+	 */
+	jQuery( '.w3tc-dismiss-user-notice' ).on( 'click', function() {
+		var show_error,
+			$this   = jQuery( this ),
+			$notice = $this.closest( '.notice' ),
+			id      = $notice.data( 'notice-id' );
+
+		// Display an error message if we failed to dismiss this user notice.
+		show_error = function( message ) {
+			$notice.removeClass().addClass( 'notice notice-error' ).html( '<p>' + message + '</p>' );
+		}
+
+		jQuery.ajax({
+			method: 'POST',
+			url:    ajaxurl,
+			data:   {
+				_wpnonce:    w3tc_nonce[0],
+				action:      'w3tc_ajax',
+				w3tc_action: 'dismiss_user_notice',
+				id:          id
+			}
+		})
+		.done( function( response ) {
+			var message;
+
+			if ( response.success !== undefined ) {
+				if ( response.success ) {
+					$notice.slideUp();
+				} else if ( response.data !== undefined ) {
+					message = response.data;
+				}
+			} else {
+				message = w3tc_options_alt['unknown_user_notice'];
+			}
+
+			if ( message ) {
+				show_error( message );
+			}
+		})
+		.fail( function() {
+			show_error( w3tc_options_alt['unknown_user_notice'] );
+		});
+
+		// If we're not sending the user anywhere on click of the dismiss button, we can return here.
+		if ( ! $this.attr( 'href' ) ) {
+			return false;
+		}
+	});
 });

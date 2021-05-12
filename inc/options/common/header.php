@@ -15,10 +15,16 @@ $licensing_visible = ( ( !Util_Environment::is_wpmu() || is_network_admin() ) &&
 <?php do_action( 'w3tc-dashboard-head' ) ?>
 <div class="wrap" id="w3tc">
 	<h2 class="logo"><?php _e( 'W3 Total Cache <span>by W3 EDGE <sup>&reg;</sup></span>', 'w3-total-cache' ); ?></h2>
-<?php if ( !Util_Environment::is_w3tc_pro( $config ) ): ?>
-	<?php include W3TC_INC_OPTIONS_DIR . '/edd/buy.php' ?>
-<?php endif ?>
-	<?php
+<?php
+	if ( ! Util_Environment::is_w3tc_pro( $config ) ) {
+		include W3TC_INC_OPTIONS_DIR . '/edd/buy.php';
+	}
+
+	// Maybe show the "hosting survey" atop the page.
+	if ( \W3TC\Generic_User_Notice_Utility::maybe_show_hosting_survey() ) {
+		echo \W3TC\Generic_User_Notice_Utility::get_esc_hosting_survey();
+	}
+
 	switch ( $page ) {
 	case 'w3tc_general':
 		if ( !empty( $_REQUEST['view'] ) ) {

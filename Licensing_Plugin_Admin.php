@@ -2,6 +2,15 @@
 namespace W3TC;
 
 class Licensing_Plugin_Admin {
+	/**
+	 * Whether or not the user has made a decision on the terms.
+	 *
+	 * This value will not be set until $this->w3tc_notes() has been run.
+	 *
+	 * @var mixed. null if the value has been set, bool if it has been.
+	 */
+	private static $has_terms_decision;
+
 	private $site_inactivated = false;
 	private $site_activated = false;
 	/**
@@ -243,6 +252,8 @@ class Licensing_Plugin_Admin {
 		}
 
 		if ( $terms != 'accept' && $terms != 'decline' && $terms != 'postpone' ) {
+			self::$has_terms_decision = false;
+
 			if ( $state_master->get_integer( 'common.install' ) < 1542029724 ) {
 				/* installed before 2018-11-12 */
 				$notes['licensing_terms'] = sprintf(
@@ -262,6 +273,8 @@ class Licensing_Plugin_Admin {
 				) .
 					$buttons;
 			}
+		} else {
+			self::$has_terms_decision = true;
 		}
 
 		return $notes;
@@ -340,7 +353,16 @@ class Licensing_Plugin_Admin {
 		return $license_key;
 	}
 
-
+	/**
+	 * Return the self::$has_terms_decision value.
+	 *
+	 * @since SINCEVERSION
+	 *
+	 * @return mixed. null if the value has been set, bool if it has been.
+	 */
+	public static function has_terms_decision() {
+		return self::$has_terms_decision;
+	}
 
 	function action_verify_plugin_license_key() {
 		$license = Util_Request::get_string( 'license_key', '' );
