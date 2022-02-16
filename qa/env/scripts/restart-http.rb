@@ -17,6 +17,8 @@ def run
 		system_assert '/etc/init.d/apache2 restart'
 	elsif ENV['W3D_HTTP_SERVER'] == 'lightspeed'
 		system_assert 'systemctl restart lsws'
+		system_assert 'chmod 755 /usr/local/lsws/conf'
+		system_assert 'chmod 777 /usr/local/lsws/conf/httpd_config.conf'
 	else
 		# php first, nginx next - otherwise not stable
 		if ENV['W3D_PHP_VERSION'] == '7.0'
