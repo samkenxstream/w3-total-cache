@@ -144,6 +144,11 @@ class BrowserCache_Environment {
 	 * @throws Util_WpFile_FilesystemOperationException with S/FTP form if it can't get the required filesystem credentials
 	 */
 	private function rules_cache_add( $config, $exs ) {
+		if (Util_Environment::is_litespeed()) {
+			$g = new BrowserCache_Environment_Lightspeed( $config );
+			$g->rules_cache_add( $exs );
+		}
+
 		Util_Rule::add_rules( $exs,
 			Util_Rule::get_browsercache_rules_cache_path(),
 			$this->rules_cache_generate( $config ),
